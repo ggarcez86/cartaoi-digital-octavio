@@ -28,7 +28,6 @@ const App: React.FC = () => {
     window.open(`https://wa.me/${CONTACT_DATA.whatsapp}`, '_blank');
   };
 
-  // Alterado para abrir diretamente no Gmail (Web Compose)
   const handleDirectEmail = () => {
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_DATA.email}`;
     window.open(gmailUrl, '_blank');
@@ -39,12 +38,33 @@ const App: React.FC = () => {
     window.open(`https://wa.me/?text=${message}`, '_blank');
   };
 
-  // Alterado para compartilhar PDF via Gmail (Web Compose)
+  /**
+   * NOVA LÓGICA DE E-MAIL (MOBILE-FIRST)
+   * 1. Prioriza o compartilhamento nativo do sistema
+   * 2. Concatena link e texto para evitar bugs de omissão em apps como Gmail
+   * 3. Fallback para mailto: com encodeURIComponent
+   */
   const handleSharePdfEmail = () => {
-    const subject = encodeURIComponent(`Cartão Digital - ${CONTACT_DATA.name}`);
-    const body = encodeURIComponent(`Olá, segue o link do meu cartão digital: ${ASSET_URLS.cardPdf}`);
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
-    window.open(gmailUrl, '_blank');
+    const titulo = `Cartão Digital - ${CONTACT_DATA.name}`;
+    const mensagemCompleta = `Olá, segue o link do meu cartão digital: ${ASSET_URLS.cardPdf}`;
+
+    const abrirMailto = (assunto: string, corpo: string) => {
+      const url = `mailto:?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+      window.location.href = url;
+    };
+
+    if (navigator.share) {
+      navigator.share({
+        title: titulo,
+        text: mensagemCompleta
+      }).catch(() => {
+        // Se o usuário cancelar ou houver erro, tenta o plano B
+        abrirMailto(titulo, mensagemCompleta);
+      });
+    } else {
+      // Navegadores que não suportam Share API (Desktop/Antigos)
+      abrirMailto(titulo, mensagemCompleta);
+    }
   };
 
   const handleDownloadPdf = () => {
