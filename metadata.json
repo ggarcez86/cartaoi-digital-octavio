@@ -1,0 +1,18 @@
+{
+  "name": "Octávio Bandeira - Cartão Digital",
+  "short_name": "Octávio B.",
+  "description": "Cartão Digital Premium - Octávio Morgado de Souza Bandeira",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#161616",
+  "theme_color": "#161616",
+  "icons": [
+    {
+      "src": "https://cdn.bioflow.online/Logo%20HTO.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "requestFramePermissions": []
+}
