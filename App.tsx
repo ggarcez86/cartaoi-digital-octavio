@@ -17,7 +17,6 @@ const App: React.FC = () => {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
-  // Efeito para esconder o toast automaticamente
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => setShowToast(false), 3000);
@@ -29,8 +28,10 @@ const App: React.FC = () => {
     window.open(`https://wa.me/${CONTACT_DATA.whatsapp}`, '_blank');
   };
 
+  // Alterado para abrir diretamente no Gmail (Web Compose)
   const handleDirectEmail = () => {
-    window.location.href = `mailto:${CONTACT_DATA.email}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_DATA.email}`;
+    window.open(gmailUrl, '_blank');
   };
 
   const handleSharePdfWhatsapp = () => {
@@ -38,10 +39,12 @@ const App: React.FC = () => {
     window.open(`https://wa.me/?text=${message}`, '_blank');
   };
 
+  // Alterado para compartilhar PDF via Gmail (Web Compose)
   const handleSharePdfEmail = () => {
     const subject = encodeURIComponent(`Cartão Digital - ${CONTACT_DATA.name}`);
     const body = encodeURIComponent(`Olá, segue o link do meu cartão digital: ${ASSET_URLS.cardPdf}`);
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank');
   };
 
   const handleDownloadPdf = () => {
@@ -66,7 +69,7 @@ const App: React.FC = () => {
         title: CONTACT_DATA.name,
         text: `Confira o cartão digital de ${CONTACT_DATA.name}`,
         url: finalShareUrl,
-      }).catch((error) => {
+      }).catch(() => {
         copyToClipboard(finalShareUrl);
       });
     } else {
@@ -166,7 +169,7 @@ const App: React.FC = () => {
 
         <button 
           onClick={handleDownloadPdf}
-          className="flex items-center justify-center gap-3 w-full bg-[#bfa072] text-[#161616] font-bold py-4 rounded-xl text-base hover:opacity-90 transition-all shadow-lg uppercase tracking-tight"
+          className="flex items-center justify-center gap-3 w-full bg-[#bfa072] text-[#161616] font-bold py-4 rounded-xl text-[15px] hover:opacity-90 transition-all shadow-lg uppercase tracking-tighter"
         >
           <DownloadIcon className="w-5 h-5 shrink-0" />
           <span className="truncate">Download para o Celular</span>
